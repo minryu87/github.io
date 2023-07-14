@@ -42,32 +42,32 @@
             });
 
             $('#search-form').on('submit', function(e) {
-                    e.preventDefault();
-                    $('#loading').show();
-                    var query = $('#query').val();
-                    $.ajax({
-                        url: 'http://office.leevi.co.kr:47712/api/v1/search',
-                        method: 'POST',
-                        data: JSON.stringify({
-                            query: query,
-                            top_n: 5
-                        }),
-                        contentType: 'application/json',
-                        success: function(data) {
-                            var results = data['result'];
-                            $('#results').empty();
-                            for (var i = 0; i < results.length; i++) {
-                                $('#results').append('<div><h3>Case No: ' + results[i].caseNo + '</h3><p>Score: ' + results[i].score + '</p><p>area: ' + results[i].area + '</p><p>Text: ' + results[i].text + '</p><p>URL: <a href="' + results[i].url + '">' + results[i].url + '</a></p></div><hr>');
-                            }
-                            $('#loading').hide();
-                        },
-                        error: function() {
-                            $('#results').text('검색 중 오류가 발생했습니다.');
-                            $('#loading').hide();
+                e.preventDefault();
+                $('#loading').show();
+                var query = $('#query').val();
+                $.ajax({
+                    url: 'http://office.leevi.co.kr:47712/api/v1/search',
+                    method: 'POST',
+                    data: JSON.stringify({
+                        query: query,
+                        top_n: 5
+                    }),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        var results = data['result'];
+                        $('#results').empty();
+                        for (var i = 0; i < results.length; i++) {
+                            $('#results').append('<div><h3>Case No: ' + results[i].caseNo + '</h3><p>Score: ' + results[i].score + '</p><p>area: ' + results[i].area + '</p><p>Text: ' + results[i].text + '</p><p>URL: <a href="' + results[i].url + '">' + results[i].url + '</a></p></div><hr>');
                         }
-                    });
+                        $('#loading').hide();
+                    },
+                    error: function() {
+                        $('#results').text('검색 중 오류가 발생했습니다.');
+                        $('#loading').hide();
+                    }
                 });
             });
+        });
     </script>
 </body>
 </html>
