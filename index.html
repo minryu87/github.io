@@ -5,10 +5,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
+    <button id="health-check">Health Check</button>
+    <div id="health-check-status"></div>
+
+    <hr>
+
     <form id="search-form">
         <input type="text" id="query" placeholder="검색어를 입력하세요">
         <input type="submit" value="Search">
     </form>
+
+    <div id="loading" style="display: none;">
+        <img src="https://loading.io/spinners/dual-ring/index.dual-ring-spinner.svg"> 검색 중...
+    </div>
 
     <hr>
 
@@ -17,8 +26,23 @@
 
     <script>
         $(document).ready(function() {
+            $('#health-check').on('click', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: 'http://office.leevi.co.kr:47712/api/v1/HealthCheck',
+                    method: 'GET',
+                    success: function(data) {
+                        $('#health-check-status').text('Health Check: ' + data);
+                    },
+                    error: function() {
+                        $('#health-check-status').text('Health Check: 서버가 응답하지 않습니다.');
+                    }
+                });
+            });
+
             $('#search-form').on('submit', function(e) {
                 e.preventDefault();
+                $('#loading').show();
                 var query = $('#query').val();
                 $.ajax({
                     url: 'http://office.leevi.co.kr:47712/api/v1/search',
@@ -34,6 +58,11 @@
                         for (var i = 0; i < results.length; i++) {
                             $('#results').append('<div><h3>Case No: ' + results[i].caseNo + '</h3><p>Score: ' + results[i].score + '</p><p>Sector: ' + results[i].sector + '</p><p>Text: ' + results[i].text + '</p><p>URL: <a href="' + results[i].url + '">' + results[i].url + '</a></p></div><hr>');
                         }
+                        $('#loading').hide();
+                    },
+                    error: function() {
+                        $('#results').text('검색 중 오류가 발생했습니다.');
+                        $('#loading').hide();
                     }
                 });
             });
@@ -41,4 +70,3 @@
     </script>
 </body>
 </html>
-
